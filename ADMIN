@@ -1,0 +1,50 @@
+import java.sql.*;
+
+public class MySQLDatabase {
+   private Connection connection;
+   private Statement statement;
+   private ResultSet resultSet;
+   
+   public MySQLDatabase() {
+      // Set up connection to MySQL database
+      try {
+         Class.forName("com.mysql.jdbc.Driver");
+         connection = DriverManager.getConnection("jdbc:mysql://localhost/mydatabase", "username", "password");
+         statement = connection.createStatement();
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
+   }
+   
+   public void addData(String name, int age) {
+      try {
+         // Prepare SQL statement to insert data
+         String query = "INSERT INTO mytable (name, age) VALUES (?, ?)";
+         PreparedStatement preparedStatement = connection.prepareStatement(query);
+         preparedStatement.setString(1, name);
+         preparedStatement.setInt(2, age);
+         
+         // Execute SQL statement to insert data
+         preparedStatement.executeUpdate();
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
+   }
+   
+   public void closeConnection() {
+      // Close connection to MySQL database
+      try {
+         if (resultSet != null) {
+            resultSet.close();
+         }
+         if (statement != null) {
+            statement.close();
+         }
+         if (connection != null) {
+            connection.close();
+         }
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
+   }
+}
